@@ -118,12 +118,21 @@ class stiply
     }
 
 
+    /**
+     * Send reminder to signer(s)
+     *
+     * @param string|null $key
+     * @param string|null $extKey
+     * @return bool
+     *
+     */
     public function sendReminder(string $key = null, string $extKey = null)
     {
         if (isset($key)) {
             if ($this->executeRequest("/sign_requests/" . $key . "/actions/send_reminder")['status_code'] == 200) {
                 return true;
             }
+//            Todo: Error handling 403 & 400
             return false;
         } elseif (isset($extKey)) {
             if ($this->getSignRequestKeyFromExtKey($extKey) != false) {
@@ -131,6 +140,7 @@ class stiply
                 if ($this->executeRequest("/sign_requests/" . $key . "/actions/send_reminder")['status_code'] == 200) {
                     return true;
                 }
+//            Todo: Error handling 403 & 400
                 return false;
             }
         }

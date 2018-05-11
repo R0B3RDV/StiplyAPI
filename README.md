@@ -41,8 +41,9 @@ If something isn't working as it supposed to be, please add an issue and we'll t
 
  - [x] Creating a sign request
  - [x] Adding multiple signers
- - [ ] Cancelling / Deleting a sign request
- - [ ] Sending a reminder
+ - [x] Cancelling / Deleting a sign request
+ - [x] Sending a reminder
+ - [ ] Error handling reminder
  - [ ] Extending a term of a sign request
  - [ ] Updating a signer (Optional)
  
