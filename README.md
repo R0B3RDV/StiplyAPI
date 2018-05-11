@@ -36,3 +36,13 @@ That's all.
 The $signers variable is an array, so you could add more signers and it will iterate over all the signers and adds them to the request.
 
 If something isn't working as it supposed to be, please add an issue and we'll try to get to it asap and feel free to contribute.
+
+#### Todo:
+
+ - [x] Creating a sign request
+ - [x] Adding multiple signers
+ - [ ] Cancelling / Deleting a sign request
+ - [ ] Sending a reminder
+ - [ ] Extending a term of a sign request
+ - [ ] Updating a signer (Optional)
+ 
