@@ -70,6 +70,8 @@ class stiply
         if (strtolower($type) == "post") {
             curl_setopt($ch, CURLOPT_POST, 1);
             curl_setopt($ch, CURLOPT_POSTFIELDS, $this->data);
+        } elseif (strtolower($type) == "delete") {
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
         }
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
@@ -85,7 +87,7 @@ class stiply
      * @param array $eHeaders
      * @return bool
      */
-    public function createSignRequest($data, $type, $name, $signers, array $eHeaders = null)
+    public function createSignRequest(array $data, $type, $name, $signers, array $eHeaders = null)
     {
         if (isset($data, $type, $name)) {
             if ($eHeaders == null) {
@@ -99,6 +101,62 @@ class stiply
             }
             $this->sendSignrequest($request->data->sign_request->key);
             return true;
+        }
+        return false;
+    }
+
+    /**
+     * @param string $key Sign request key
+     * @return bool
+     */
+    public function cancelSignRequest($key)
+    {
+        if ($this->executeRequest("/sign_requests/" . $key, "DELETE")['status_code'] == 200) {
+            return true;
+        }
+        return false;
+    }
+
+
+    /**
+     * Send reminder to signer(s)
+     *
+     * @param string|null $key
+     * @param string|null $extKey
+     * @return bool
+     *
+     */
+    public function sendReminder(string $key = null, string $extKey = null)
+    {
+        if (isset($key)) {
+            if ($this->executeRequest("/sign_requests/" . $key . "/actions/send_reminder")['status_code'] == 200) {
+                return true;
+            }
+//            Todo: Error handling 403 & 400
+            return false;
+        } elseif (isset($extKey)) {
+            if ($this->getSignRequestKeyFromExtKey($extKey) != false) {
+                $key = $this->getSignRequestKeyFromExtKey($extKey);
+                if ($this->executeRequest("/sign_requests/" . $key . "/actions/send_reminder")['status_code'] == 200) {
+                    return true;
+                }
+//            Todo: Error handling 403 & 400
+                return false;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Returns sign request key from external key identifier
+     * @param string $extKey
+     * @return bool
+     */
+    public function getSignRequestKeyFromExtKey(string $extKey)
+    {
+        $key = $this->executeRequest("/sign_requests/" . $extKey . "/actions/get_sign_request_key");
+        if ($key['status_code'] == 200) {
+            return $key['key'];
         }
         return false;
     }
